@@ -1,0 +1,19 @@
+---
+- hosts: all
+  remote_user: vagrant
+  become: true
+  tasks:
+
+  - name: Ensure firewalld is active
+    service: name=firewalld state=started
+  - name: Set net.ipv4_forward
+    sysctl:
+      name: net.ipv4.ip_forward
+      value: 1
+      sysctl_set: yes
+      state: present
+      reload: yes
+  - name: Set forwarding rule on firewalld
+    command: firewall-cmd --zone=external --add-forward-port=port=80:proto=tcp:toaddr=10.0.0.21 --permanent
+  - name: Bounce firewalld
+    service: name=firewalld state=restarted

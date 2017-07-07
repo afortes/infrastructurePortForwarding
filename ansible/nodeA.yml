@@ -1,0 +1,12 @@
+---
+- hosts: all
+  remote_user: vagrant
+  become: true
+  tasks:
+    
+  - name: Container nginx
+    docker_container:
+      name: docker-nginx
+      state: started
+      image: docker.io/nginx
+      command: -p 80:80 nginx
